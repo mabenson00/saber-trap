@@ -11,9 +11,9 @@
   const GRID_H = H / GRID_SIZE; // 150
 
   const BALL_RADIUS = 10;
-  const BALL_START_SPEED = 320;
-  const BALL_SPEED_INC = 20; // extra px/s every 15 s
-  const BALL_MAX_SPEED = 700;
+  const BALL_START_SPEED = 500;
+  const BALL_SPEED_INC = 25; // extra px/s every 15 s
+  const BALL_MAX_SPEED = 950;
   const BALL_BOUNCE_RAND = 0.12; // radians
 
   const PU_SPEED = 80; // powerup bounce speed px/s
