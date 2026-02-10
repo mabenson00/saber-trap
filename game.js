@@ -284,6 +284,7 @@
                     else action();
                 }
                 if (e.code === 'KeyR' && this.state !== 'menu') this._start();
+                if (e.code === 'KeyC' && this.state === 'menu') this._resetBests();
                 if ((e.code === 'KeyP' || e.code === 'Escape') && (this.state === 'playing' || this.state === 'paused'))
                     this.state = this.state === 'playing' ? 'paused' : 'playing';
                 // snap rotation
@@ -700,6 +701,12 @@
             localStorage.setItem('st_bests', JSON.stringify(this.bests));
         }
 
+        _resetBests() {
+            this.bests = { score: 0, pct: 0, combo: 0 };
+            localStorage.setItem('st_bests', JSON.stringify(this.bests));
+            this._notif('HIGH SCORES RESET', '#ffcc00');
+        }
+
         _stars() {
             if (this.claimedPct >= .90) return 3;
             if (this.claimedPct >= .75) return 2;
@@ -1007,6 +1014,9 @@
                 c.fillStyle = 'rgba(255,200,0,.55)';
                 c.font = '13px "Orbitron","Courier New",monospace';
                 c.fillText('BEST: ' + this.bests.score.toLocaleString() + ' pts  |  ' + (this.bests.pct * 100).toFixed(1) + '% claimed', W / 2, H / 2 + 170);
+                c.fillStyle = 'rgba(255,255,255,.25)';
+                c.font = '11px "Orbitron","Courier New",monospace';
+                c.fillText('Press C to reset high scores', W / 2, H / 2 + 192);
             }
         }
 
