@@ -13,7 +13,7 @@
   const BALL_RADIUS = 10;
   const BALL_START_SPEED = 400;
   const BALL_SPEED_INC = 15; // extra px/s every 15 s
-  const BALL_MAX_SPEED = 580;
+  const BALL_MAX_SPEED = 800;
   const BALL_BOUNCE_RAND = 0.12; // radians
 
   const SABER_EXT_SPEED = 800; // px/s  (was 2200 — much slower, real danger)
