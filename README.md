@@ -45,4 +45,4 @@ A neon-glow arcade game where you wield a two-sided lightsaber to build walls an
 
 ## Play
 
-[Play Saber Trap](https://yourusername.github.io/saber-trap/)
+[Play Saber Trap](https://mabenson00.github.io/saber-trap/)
