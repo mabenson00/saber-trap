@@ -16,7 +16,7 @@
   const BALL_MAX_SPEED = 950;
   const BALL_BOUNCE_RAND = 0.12; // radians
 
-  const PU_SPEED = 80; // powerup bounce speed px/s
+  const PU_SPEED = 500; // powerup bounce speed — matches ball start speed
 
   const SABER_EXT_SPEED = 800; // px/s  (was 2200 — much slower, real danger)
   const SABER_COOLDOWN = 650; // ms
