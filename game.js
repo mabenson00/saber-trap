@@ -11,10 +11,12 @@
   const GRID_H = H / GRID_SIZE; // 150
 
   const BALL_RADIUS = 10;
-  const BALL_START_SPEED = 400;
-  const BALL_SPEED_INC = 15; // extra px/s every 15 s
-  const BALL_MAX_SPEED = 800;
+  const BALL_START_SPEED = 320;
+  const BALL_SPEED_INC = 20; // extra px/s every 15 s
+  const BALL_MAX_SPEED = 700;
   const BALL_BOUNCE_RAND = 0.12; // radians
+
+  const PU_SPEED = 80; // powerup bounce speed px/s
 
   const SABER_EXT_SPEED = 800; // px/s  (was 2200 — much slower, real danger)
   const SABER_COOLDOWN = 650; // ms
@@ -772,7 +774,32 @@
           }
         }
       }
-      for (const p of this.powerups) p.pulse = (p.pulse || 0) + dt * 3;
+      // move & bounce powerups
+      for (const p of this.powerups) {
+        p.pulse = (p.pulse || 0) + dt * 3;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        // bounce off boundaries
+        const r = POWERUP_RADIUS;
+        if (p.x - r < 0) { p.x = r; p.vx = Math.abs(p.vx); }
+        if (p.x + r > W) { p.x = W - r; p.vx = -Math.abs(p.vx); }
+        if (p.y - r < 0) { p.y = r; p.vy = Math.abs(p.vy); }
+        if (p.y + r > H) { p.y = H - r; p.vy = -Math.abs(p.vy); }
+        // bounce off player walls
+        for (const s of this.walls) {
+          const cp = cpOnSeg(p.x, p.y, s.x1, s.y1, s.x2, s.y2);
+          const dx = p.x - cp.x, dy = p.y - cp.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < r && d > 0.01) {
+            const nx = dx / d, ny = dy / d;
+            const vd = p.vx * nx + p.vy * ny;
+            if (vd < 0) { p.vx -= 2 * vd * nx; p.vy -= 2 * vd * ny; }
+            p.x = cp.x + nx * r; p.y = cp.y + ny * r;
+          }
+        }
+      }
+      // collect powerups that drifted into claimed area
+      this._collectPU();
     }
 
     _spawnPU() {
@@ -781,7 +808,10 @@
       const pool = neg ? ["speed", "multiball", "phantom", "wallrot"] : ["slowmo", "freeze", "ghost", "shield"];
       const type = pool[Math.floor(Math.random() * pool.length)];
       const pos = this._randUnc();
-      if (pos) this.powerups.push({ x: pos.x, y: pos.y, type, def: PU[type], pulse: 0 });
+      if (pos) {
+        const a = Math.random() * Math.PI * 2;
+        this.powerups.push({ x: pos.x, y: pos.y, vx: Math.cos(a) * PU_SPEED, vy: Math.sin(a) * PU_SPEED, type, def: PU[type], pulse: 0 });
+      }
     }
 
     _randUnc() {
