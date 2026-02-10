@@ -10,14 +10,14 @@
     const GRID_W = W / GRID_SIZE;   // 240
     const GRID_H = H / GRID_SIZE;   // 150
 
-    const BALL_RADIUS = 8;
-    const BALL_START_SPEED = 180;
-    const BALL_SPEED_INC = 8;        // extra px/s every 15 s
-    const BALL_MAX_SPEED = 480;
-    const BALL_BOUNCE_RAND = 0.06;   // radians
+    const BALL_RADIUS = 10;
+    const BALL_START_SPEED = 250;
+    const BALL_SPEED_INC = 15;       // extra px/s every 15 s
+    const BALL_MAX_SPEED = 580;
+    const BALL_BOUNCE_RAND = 0.12;   // radians
 
-    const SABER_EXT_SPEED = 2200;    // px/s
-    const SABER_COOLDOWN = 400;      // ms
+    const SABER_EXT_SPEED = 800;     // px/s  (was 2200 — much slower, real danger)
+    const SABER_COOLDOWN = 650;      // ms
     const SABER_ROT_SPEED = Math.PI * 1.6;
 
     const POWERUP_SPAWN_MIN = 8000;
@@ -597,7 +597,7 @@
         }
 
         _spawnPU() {
-            const negChance = .2 + this.claimedPct * .6;
+            const negChance = .3 + this.claimedPct * .55;
             const neg = Math.random() < negChance;
             const pool = neg ? ['speed', 'multiball', 'phantom', 'wallrot'] : ['slowmo', 'freeze', 'ghost', 'shield'];
             const type = pool[Math.floor(Math.random() * pool.length)];
@@ -858,17 +858,7 @@
                     c.beginPath(); c.moveTo(ex2, ey2); c.lineTo(ex1, ey1); c.stroke();
                     c.restore();
                 } else {
-                    const { e1, e2, ea } = this._saberEnds();
-                    if (e1 && e2) {
-                        const inU = this._isUnc(this.mouse.x, this.mouse.y);
-                        const onCD = performance.now() < sb.cd;
-                        c.save();
-                        c.strokeStyle = !inU ? 'rgba(255,50,50,.25)' : onCD ? 'rgba(255,255,100,.18)' : 'rgba(0,255,255,.22)';
-                        c.lineWidth = 2; c.setLineDash([8, 8]);
-                        c.beginPath(); c.moveTo(e2.x, e2.y); c.lineTo(e1.x, e1.y); c.stroke();
-                        c.setLineDash([]); c.restore();
-                    }
-                    // crosshair
+                    // crosshair only — no preview line (you have to aim blind)
                     const mx = this.mouse.x, my = this.mouse.y;
                     const ea2 = this.effects.reverse ? this.angle + Math.PI / 2 : this.angle;
                     const col = this._isUnc(mx, my) ? '#00ffff' : '#ff3333';
